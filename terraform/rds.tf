@@ -1,10 +1,10 @@
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "sejal-db-subnet-group"
+  name       = "ahmad-db-subnet-group"
   subnet_ids = data.aws_subnets.default.ids
 }
 
 resource "aws_security_group" "rds_sg" {
-  name        = "sejal-rds-sg"
+  name        = "ahmad-rds-sg"
   description = "Allow ECS to connect to RDS"
   vpc_id      = data.aws_vpc.default.id
 
@@ -22,8 +22,8 @@ resource "aws_security_group" "rds_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-resource "aws_db_instance" "sejal_db" {
-  identifier              = "sejal-db"
+resource "aws_db_instance" "ahmad_db" {
+  identifier              = "ahmad-db"
   engine                  = "postgres"
   instance_class          = "db.t3.micro"
   allocated_storage       = 20

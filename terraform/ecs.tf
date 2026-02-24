@@ -2,16 +2,16 @@
 # ECS CLUSTER
 ############################
 
-resource "aws_ecs_cluster" "sejal_cluster" {
-  name = "sejal-fargate-cluster"
+resource "aws_ecs_cluster" "ahmad_cluster" {
+  name = "ahmad-fargate-cluster"
 }
 
 ############################
 # TASK DEFINITION (FARGATE)
 ############################
 
-resource "aws_ecs_task_definition" "sejal_task" {
-  family                   = "sejal-fargate-task"
+resource "aws_ecs_task_definition" "ahmad_task" {
+  family                   = "ahmad-fargate-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
@@ -22,7 +22,7 @@ resource "aws_ecs_task_definition" "sejal_task" {
 
   container_definitions = jsonencode([
     {
-      name      = "sejal-container"
+      name      = "ahmad-container"
       image     = var.image_url
       essential = true
 
@@ -38,7 +38,7 @@ resource "aws_ecs_task_definition" "sejal_task" {
              },
   {
     name  = "DATABASE_HOST"
-    value = aws_db_instance.sejal_db.address
+    value = aws_db_instance.ahmad_db.address
   },
   {
     name  = "DATABASE_PORT"
@@ -97,7 +97,7 @@ resource "aws_ecs_task_definition" "sejal_task" {
 # ECS SERVICE (FARGATE)
 ############################
 resource "aws_security_group" "ecs_sg" {
-  name        = "sejal-ecs-sg"
+  name        = "ahmad-ecs-sg"
   description = "Managed by Terraform"
   vpc_id      = data.aws_vpc.default.id
 
@@ -116,10 +116,10 @@ resource "aws_security_group" "ecs_sg" {
   }
 
 }
-resource "aws_ecs_service" "sejal_service" {
-  name            = "sejal-service"
-  cluster         = aws_ecs_cluster.sejal_cluster.id
-  task_definition = aws_ecs_task_definition.sejal_task.arn
+resource "aws_ecs_service" "ahmad_service" {
+  name            = "ahmad-service"
+  cluster         = aws_ecs_cluster.ahmad_cluster.id
+  task_definition = aws_ecs_task_definition.ahmad_task.arn
   desired_count   = 1
   capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"
@@ -127,7 +127,7 @@ resource "aws_ecs_service" "sejal_service" {
   }
   load_balancer {
   target_group_arn = aws_lb_target_group.ecs_tg.arn
-  container_name   = "sejal-container"  
+  container_name   = "ahmad-container"  
   container_port   = 1337
 }
 

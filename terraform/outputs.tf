@@ -3,10 +3,10 @@ output "ecr_repository_url" {
 }
 
 output "rds_endpoint" {
-  value = aws_db_instance.sejal_db.endpoint
+  value = aws_db_instance.ahmad_db.endpoint
 
 }
 
 output "ecs_cluster_name" {
-  value = aws_ecs_cluster.sejal_cluster.name
+  value = aws_ecs_cluster.ahmad_cluster.name
 }

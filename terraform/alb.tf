@@ -3,7 +3,7 @@
 ########################################
 
 resource "aws_security_group" "alb_sg" {
-  name        = "sejal-ecs-alb-sg"
+  name        = "ahmad-ecs-alb-sg"
   description = "Allow HTTP traffic to ALB"
   vpc_id      = data.aws_vpc.default.id
 
@@ -27,7 +27,7 @@ resource "aws_security_group" "alb_sg" {
 ########################################
 
 resource "aws_lb" "ecs_alb" {
-  name               = "sejal-ecs-alb"
+  name               = "ahmad-ecs-alb"
   load_balancer_type = "application"
   subnets            = data.aws_subnets.default.ids
   security_groups    = [aws_security_group.alb_sg.id]
@@ -40,7 +40,7 @@ resource "aws_lb" "ecs_alb" {
 ########################################
 
 resource "aws_lb_target_group" "ecs_tg" {
-  name        = "sejal-ecs-tg"
+  name        = "ahmad-ecs-tg"
   port        = 1337
   protocol    = "HTTP"
   vpc_id      = data.aws_vpc.default.id
