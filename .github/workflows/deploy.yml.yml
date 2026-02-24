@@ -1,0 +1,48 @@
+name: CI - Build & Deploy Image
+
+on:
+  workflow_run:
+    workflows: ["CD - Create Infrastructure"]
+    types:
+      - completed
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      TF_VAR_vpc_id: ${{ secrets.VPC_ID }}
+      TF_VAR_image_url: dummy
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push Docker Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/ahmad-ecs-task:$IMAGE_TAG ./strapi
+          docker push $ECR_REGISTRY/ahmad-ecs-task:$IMAGE_TAG
+
+      - name: Update ECS Task with Real Image
+        run: |
+          cd terraform
+          terraform init -reconfigure
+          terraform apply -auto-approve \
+            -var="image_url=${{ steps.login-ecr.outputs.registry }}/ahmad-ecs-task:${{ github.sha }}"
