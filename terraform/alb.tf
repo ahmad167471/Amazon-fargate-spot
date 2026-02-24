@@ -7,7 +7,6 @@ resource "aws_security_group" "alb_sg" {
   description = "Allow HTTP traffic to ALB"
   vpc_id      = data.aws_vpc.default.id
 
-  ##Fixed
 
   ingress {
     from_port   = 80

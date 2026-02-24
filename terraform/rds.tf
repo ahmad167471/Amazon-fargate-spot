@@ -3,7 +3,6 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   subnet_ids = data.aws_subnets.default.ids
 }
 
-#fixed
 
 resource "aws_security_group" "rds_sg" {
   name        = "ahmad-rds-sg"
